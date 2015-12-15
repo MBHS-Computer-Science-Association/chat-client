@@ -1,0 +1,32 @@
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+public class Client {
+	private boolean isActive;
+	private Queue<Message> messageQueue;
+	private Thread displayThread;
+	private ClientWindow window;
+	
+	public Client() {
+		messageQueue = new PriorityQueue<>();
+	}
+	
+	public void activateMessages() {
+		displayThread  = new Thread() {
+			public void run() {
+				while (!messageQueue.isEmpty()) {
+					Message m;
+					if ((m = messageQueue.poll()) != null) {
+						
+					}
+				}
+			}
+		};
+		
+		displayThread.start();
+	}
+	
+	public void inactivateMessages() {
+		displayThread.interrupt();
+	}
+}

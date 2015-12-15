@@ -1,0 +1,23 @@
+import java.util.Date;
+
+public class Message {
+	private String message;
+	private Date timeSent;
+	private Date timeReceived;
+	
+	public Message(String message) {
+		this.message = message;
+		this.timeSent = new Date();
+	}
+	
+	public String receiveMessage() {
+		if (timeReceived == null) timeReceived = new Date();
+		String temp = message;
+		message = null;
+		return temp;
+	}
+	
+	
+	
+	
+}
