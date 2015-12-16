@@ -15,7 +15,10 @@ public class Client {
 	private InetAddress inetAddress;
 
 	private ClientWindow window;
+<<<<<<< HEAD
 	private boolean isRunning = true;
+=======
+>>>>>>> 96a209f4f055b2f9e526318805a35b2d6b533fa7
 
 	public Client() {
 		messageQueue = new LinkedList<>();
@@ -26,6 +29,7 @@ public class Client {
 		window.displayMessage(new Message("Hello"));
 	}
 
+<<<<<<< HEAD
 	public void openConnection() {
 		try {
 			socket = new DatagramSocket();
@@ -39,6 +43,8 @@ public class Client {
 		System.out.println(inetAddress.getHostAddress());
 	}
 
+=======
+>>>>>>> 96a209f4f055b2f9e526318805a35b2d6b533fa7
 	public void send(Message message) {
 		final byte[] data;
 		try {
@@ -70,8 +76,13 @@ public class Client {
 		return packet;
 	}
 
+<<<<<<< HEAD
 	public void displayMessages() {
 		new Thread("Display Messages") {
+=======
+	public void activateMessages() {
+		displayThread = new Thread() {
+>>>>>>> 96a209f4f055b2f9e526318805a35b2d6b533fa7
 			public void run() {
 				while (isRunning) {
 					if (!window.isActive())
@@ -86,6 +97,7 @@ public class Client {
 		}.start();
 	}
 
+<<<<<<< HEAD
 	public void listen() {
 		new Thread("Listen") {
 			public void run() {
@@ -99,6 +111,10 @@ public class Client {
 				}
 			}
 		}.start();
+=======
+	public void deactivateMessages() {
+		displayThread.interrupt();
+>>>>>>> 96a209f4f055b2f9e526318805a35b2d6b533fa7
 	}
 
 	public Queue<Message> getMessageQueue() {

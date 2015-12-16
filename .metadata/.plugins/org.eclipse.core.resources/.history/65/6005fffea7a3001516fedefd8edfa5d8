@@ -3,9 +3,12 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+<<<<<<< HEAD
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
+=======
+>>>>>>> 96a209f4f055b2f9e526318805a35b2d6b533fa7
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Timer;
@@ -13,9 +16,18 @@ import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+<<<<<<< HEAD
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+=======
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+>>>>>>> 96a209f4f055b2f9e526318805a35b2d6b533fa7
 
 public class ClientWindow {
 
@@ -25,10 +37,15 @@ public class ClientWindow {
 	private JTextField textField;
 	private JButton btnSend;
 	private JTextArea draftMessage;
+<<<<<<< HEAD
 	
 	private WindowListener windowListener;
 	private boolean isActive;
 
+=======
+
+	private WindowListener windowListener;
+>>>>>>> 96a209f4f055b2f9e526318805a35b2d6b533fa7
 	private JTextField displayMessage;
 
 	/**
@@ -121,6 +138,8 @@ public class ClientWindow {
 		btnSend = new JButton("Send");
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+<<<<<<< HEAD
+=======
 			}
 		});
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
@@ -153,14 +172,21 @@ public class ClientWindow {
 
 			@Override
 			public void windowActivated(WindowEvent e) {
-				isActive = true;
+				parentClient.activateMessages();
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
-				isActive = false;
+				parentClient.deactivateMessages();
+>>>>>>> 96a209f4f055b2f9e526318805a35b2d6b533fa7
 			}
 		});
+		GridBagConstraints gbc_btnSend = new GridBagConstraints();
+		gbc_btnSend.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnSend.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSend.gridx = 1;
+		gbc_btnSend.gridy = 5;
+		frame.getContentPane().add(btnSend, gbc_btnSend);
 
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowActivated(WindowEvent e) {isActive = true;}
