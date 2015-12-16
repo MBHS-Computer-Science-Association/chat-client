@@ -2,14 +2,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 
 public class ClientWindow {
 
@@ -18,17 +21,18 @@ public class ClientWindow {
 	private JButton btnSend;
 	private JSeparator separator;
 	private JTextArea draftMessage;
-	private JLabel newMessage;
+	private JLabel displayMessage;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void openClient() {
+	public void openClient() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ClientWindow window = new ClientWindow();
-					window.frame.setVisible(true);
+//					ClientWindow window = new ClientWindow();
+//					window.frame.setVisible(true);
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,8 +52,23 @@ public class ClientWindow {
 	 */
 
 	//set JLabel to display single message
-	public void displayMessage(String message) {
-		newMessage.setText(message);
+	public void displayMessage(Message message) {
+		Timer timer = new Timer();
+		
+		displayMessage = new JLabel("");
+		displayMessage.setBounds(580, 430, 350, 118);
+		displayMessage.setText(message.receiveMessage());
+		frame.getContentPane().add(displayMessage);
+		
+		TimerTask task = new TimerTask() {
+			public void run() {
+				displayMessage.setText("");
+			}
+		};
+		
+		// five second delay
+		timer.schedule(task, 5000);
+		
 	}
 
 	private void initialize() {
@@ -74,9 +93,10 @@ public class ClientWindow {
 		btnSend = new JButton("Send");
 		btnSend.setBounds(942, 585, 75, 29);
 		frame.getContentPane().add(btnSend);
-
-		newMessage = new JLabel("");
-		newMessage.setBounds(580, 430, 350, 118);
-		frame.getContentPane().add(newMessage);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setEditable(false);
+		textPane.setBounds(580, 529, 312, 20);
+		frame.getContentPane().add(textPane);
 	}
 }
