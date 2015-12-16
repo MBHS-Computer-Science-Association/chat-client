@@ -1,7 +1,8 @@
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Toolkit;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Timer;
@@ -10,25 +11,23 @@ import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ClientWindow {
 
 	private Client parentClient;
-	
+
 	private JFrame frame;
 	private JTextField textField;
 	private JButton btnSend;
-	private JSeparator separator;
 	private JTextArea draftMessage;
-	private JLabel displayMessage;
-	
-	private WindowListener windowListener;
 
+	private WindowListener windowListener;
+	private JTextField displayMessage;
 
 	/**
 	 * Create the application.
@@ -37,7 +36,7 @@ public class ClientWindow {
 		parentClient = client;
 		initialize();
 	}
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -45,8 +44,8 @@ public class ClientWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-//					ClientWindow window = new ClientWindow();
-//					window.frame.setVisible(true);
+					// ClientWindow window = new ClientWindow();
+					// window.frame.setVisible(true);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -62,55 +61,73 @@ public class ClientWindow {
 	public void send(String message) {
 		parentClient.send(new Message(message));
 	}
-	
-	//set JLabel to display single message
+
+	// set JLabel to display single message
 	public void displayMessage(Message message) {
+
 		Timer timer = new Timer();
-		
-		displayMessage = new JLabel("");
-		displayMessage.setBounds(580, 430, 350, 118);
 		displayMessage.setText(message.receiveMessage());
-		frame.getContentPane().add(displayMessage);
-		
+
 		TimerTask task = new TimerTask() {
 			public void run() {
 				displayMessage.setText("");
 			}
 		};
-		
+
 		// five second delay
 		timer.schedule(task, 5000);
 	}
 
 	private void initialize() {
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		frame = new JFrame();
-		frame.setAlwaysOnTop(true);
-		frame.setBounds(100, 100, screenSize.width, screenSize.height);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setBackground(Color.GRAY);
-		frame.getContentPane().setLayout(null);
 
-		separator = new JSeparator();
-		separator.setForeground(Color.BLACK);
-		separator.setOrientation(SwingConstants.VERTICAL);
-		separator.setBounds(200, 6, 12, 655);
-		frame.getContentPane().add(separator);
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		frame = new JFrame("Chat Client");
+		frame.setAlwaysOnTop(true);
+		frame.setBounds(100, 100, 600, 400);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setBackground(new Color(152, 181, 214));
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] { 25, 275, 25, 0 };
+		gridBagLayout.rowHeights = new int[] { 100, 25, 100, 25, 25, 25, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		frame.getContentPane().setLayout(gridBagLayout);
+
+		displayMessage = new JTextField();
+		displayMessage.setEditable(false);
+		GridBagConstraints gbc_displayMessage = new GridBagConstraints();
+		gbc_displayMessage.insets = new Insets(0, 0, 5, 5);
+		gbc_displayMessage.fill = GridBagConstraints.HORIZONTAL;
+		gbc_displayMessage.gridx = 1;
+		gbc_displayMessage.gridy = 0;
+		frame.getContentPane().add(displayMessage, gbc_displayMessage);
+		displayMessage.setColumns(10);
 
 		draftMessage = new JTextArea();
-		draftMessage.setBounds(580, 560, 350, 80);
-		frame.getContentPane().add(draftMessage);
+		GridBagConstraints gbc_draftMessage = new GridBagConstraints();
+		gbc_draftMessage.fill = GridBagConstraints.BOTH;
+		gbc_draftMessage.insets = new Insets(0, 0, 5, 5);
+		gbc_draftMessage.gridx = 1;
+		gbc_draftMessage.gridy = 2;
+		frame.getContentPane().add(draftMessage, gbc_draftMessage);
 
 		btnSend = new JButton("Send");
-		btnSend.setBounds(942, 585, 75, 29);
-		frame.getContentPane().add(btnSend);
-		
-		JTextPane textPane = new JTextPane();
-		textPane.setEditable(false);
-		textPane.setBounds(580, 529, 312, 20);
-		frame.getContentPane().add(textPane);
-		
-		
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		GridBagConstraints gbc_btnSend = new GridBagConstraints();
+		gbc_btnSend.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnSend.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSend.gridx = 1;
+		gbc_btnSend.gridy = 5;
+		frame.getContentPane().add(btnSend, gbc_btnSend);
+
 		frame.addWindowListener(new WindowListener() {
 			@Override
 			public void windowOpened(WindowEvent e) {

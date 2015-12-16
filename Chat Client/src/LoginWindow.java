@@ -7,6 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 
 public class LoginWindow {
 
@@ -50,23 +54,24 @@ public class LoginWindow {
 		frame.getContentPane().setLayout(null);
 
 		lblUsername = new JLabel("Username");
-		lblUsername.setBounds(103, 128, 62, 16);
+		lblUsername.setBounds(80, 106, 62, 14);
 		frame.getContentPane().add(lblUsername);
 
 		textField = new JTextField();
-		textField.setBounds(177, 122, 150, 28);
+		textField.setBounds(152, 99, 150, 28);
 		frame.getContentPane().add(textField);
 		textField.setColumns(10);
 
 		lblPassword = new JLabel("Password");
-		lblPassword.setBounds(106, 158, 59, 16);
+		lblPassword.setBounds(80, 137, 62, 14);
 		frame.getContentPane().add(lblPassword);
 
 		passwordField = new JPasswordField();
-		passwordField.setBounds(177, 152, 150, 28);
+		passwordField.setBounds(152, 130, 150, 28);
 		frame.getContentPane().add(passwordField);
 
 		btnSignIn = new JButton("Sign in");
+		btnSignIn.setBounds(152, 169, 150, 29);
 		btnSignIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
@@ -74,7 +79,6 @@ public class LoginWindow {
 //				new ClientWindow();
 			}
 		});
-		btnSignIn.setBounds(210, 192, 117, 29);
 		frame.getContentPane().add(btnSignIn);
 	}
 }
