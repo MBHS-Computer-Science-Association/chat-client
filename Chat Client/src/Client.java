@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Client {
@@ -8,15 +8,8 @@ public class Client {
 	private ClientWindow window;
 	
 	public Client() {
-		messageQueue = new LinkedList<>();
-		//
-//		messageQueue = new PriorityQueue<>();
-		window = new ClientWindow();
-		window.openClient();
-		window.displayMessage(new Message("Hello"));
+		messageQueue = new PriorityQueue<>();
 	}
-	
-	
 	
 	public void activateMessages() {
 		displayThread  = new Thread() {
@@ -24,7 +17,7 @@ public class Client {
 				while (!messageQueue.isEmpty()) {
 					Message message;
 					if ((message = messageQueue.poll()) != null) {
-						window.displayMessage(message);
+//						window.display(message);
 					}
 				}
 			}
@@ -34,13 +27,5 @@ public class Client {
 	
 	public void inactivateMessages() {
 		displayThread.interrupt();
-	}
-	
-	public Queue<Message> getMessageQueue() {
-		return messageQueue;
-	}
-	
-	public static void main(String[] args) {
-		Client testClient = new Client();
 	}
 }
