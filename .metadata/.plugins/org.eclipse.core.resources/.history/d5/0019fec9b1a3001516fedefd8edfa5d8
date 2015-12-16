@@ -1,0 +1,129 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Client {
+	private boolean isActive;
+	private Queue<Message> messageQueue;
+	// UDP Socket - DatagramSocket
+	private DatagramSocket socket;
+	private InetAddress inetAddress;
+	private int port;
+
+	private ClientWindow window;
+	private boolean isRunning = true;
+
+	public Client() {
+		this(85);
+	}
+	
+	public Client(int port) {
+		isRunning = true;
+		messageQueue = new LinkedList<>();
+		// messageQueue = new PriorityQueue<>();
+		window = new ClientWindow(this);
+		window.openClient();
+		this.port = port;
+		displayMessages();
+	}
+
+	public void openConnection() {
+		try {
+			socket = new DatagramSocket();
+			// change to actual IP address
+			inetAddress = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+		System.out.println(inetAddress.getHostAddress());
+	}
+
+	public void send(Message message) {
+		final byte[] data;
+		try {
+			data = Message.serialize(message);
+			new Thread("Sending Message") {
+				public void run() {
+					DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, 85);
+					try {
+						socket.send(packet);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public DatagramPacket receivePacket() {
+		byte[] data = new byte[1024];
+		DatagramPacket packet = new DatagramPacket(data, data.length);
+
+		try {
+			socket.receive(packet);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return packet;
+	}
+
+	public void displayMessages() {
+		new Thread("Display Messages") {
+			public void run() {
+				Message message;
+				while (isRunning) {
+//					System.out.print("");
+					if (window.isActive() && window.isReady()) {
+						if ((message = messageQueue.poll()) != null) {
+							window.displayMessage(message);
+						}
+					}
+					
+				}
+			}
+		}.start();
+	}
+
+	public void listen() {
+		new Thread("Listen") {
+			public void run() {
+				while (isRunning) {
+					DatagramPacket packet = receivePacket();
+					try {
+						messageQueue.add((Message) Message.deserialize(packet.getData()));
+					} catch (ClassNotFoundException | IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}.start();
+	}
+
+	public Queue<Message> getMessageQueue() {
+		return messageQueue;
+	}
+
+	public static void main(String[] args) {
+		Client testClient = new Client();
+		try {
+			BufferedReader input = new BufferedReader(new FileReader("input.txt"));
+			String line;
+			while ((line = input.readLine()) != null) {
+				testClient.getMessageQueue().add(new Message(line));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}

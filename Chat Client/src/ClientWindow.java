@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -22,12 +24,12 @@ public class ClientWindow {
 	private Client parentClient;
 
 	private JFrame frame;
-	private JTextField textField;
 	private JButton btnSend;
-	private JTextArea draftMessage;
+	private JTextField draftMessage;
 	
 	private WindowListener windowListener;
 	private boolean isActive;
+	private boolean isReady;
 
 	private JTextField displayMessage;
 
@@ -35,6 +37,7 @@ public class ClientWindow {
 	 * Create the application.
 	 */
 	public ClientWindow(Client client) {
+		isReady = false;
 		parentClient = client;
 		initialize();
 	}
@@ -49,6 +52,7 @@ public class ClientWindow {
 					// ClientWindow window = new ClientWindow();
 					// window.frame.setVisible(true);
 					frame.setVisible(true);
+					isReady = true;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -60,24 +64,27 @@ public class ClientWindow {
 	 * Initialize the contents of the frame.
 	 */
 
-	public void send(String message) {
-		parentClient.send(new Message(message));
+	public void send() {
+		parentClient.send(new Message(draftMessage.getText()));
+		draftMessage.setText("");
 	}
 
 	// set JLabel to display single message
 	public void displayMessage(Message message) {
-
+		System.out.println("Message is being displayed...");
+		isReady = false;
 		Timer timer = new Timer();
 		displayMessage.setText(message.receiveMessage());
 
 		TimerTask task = new TimerTask() {
 			public void run() {
 				displayMessage.setText("");
+				isReady = true;
 			}
 		};
 
-		// five second delay
-		timer.schedule(task, 5000);
+		// delay
+		timer.schedule(task, message.getExpiry());
 	}
 
 	private void initialize() {
@@ -110,17 +117,26 @@ public class ClientWindow {
 		frame.getContentPane().add(displayMessage, gbc_displayMessage);
 		displayMessage.setColumns(10);
 
-		draftMessage = new JTextArea();
+		draftMessage = new JTextField();
 		GridBagConstraints gbc_draftMessage = new GridBagConstraints();
 		gbc_draftMessage.fill = GridBagConstraints.BOTH;
 		gbc_draftMessage.insets = new Insets(0, 0, 5, 5);
 		gbc_draftMessage.gridx = 1;
 		gbc_draftMessage.gridy = 2;
+		draftMessage.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					send();
+				}
+			}
+		});
 		frame.getContentPane().add(draftMessage, gbc_draftMessage);
 
 		btnSend = new JButton("Send");
 		btnSend.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
+				send();
 			}
 		});
 		GridBagConstraints gbc_btnSend = new GridBagConstraints();
@@ -138,5 +154,13 @@ public class ClientWindow {
 	
 	public boolean isActive() {
 		return isActive;
+	}
+	
+	public boolean isReady() {
+		return isReady;
+	}
+	
+	public void setReady(boolean value) {
+		isReady = value;
 	}
 }

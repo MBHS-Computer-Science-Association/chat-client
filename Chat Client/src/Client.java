@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -8,29 +10,42 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Client {
+	static int portFrom;
+	static int portTo;
+
 	private boolean isActive;
 	private Queue<Message> messageQueue;
 	// UDP Socket - DatagramSocket
 	private DatagramSocket socket;
 	private InetAddress inetAddress;
+	private int port;
 
 	private ClientWindow window;
 	private boolean isRunning = true;
 
 	public Client() {
+		this(85);
+	}
+
+	public Client(int port) {
+		isRunning = true;
 		messageQueue = new LinkedList<>();
-		//
 		// messageQueue = new PriorityQueue<>();
+		openConnection();
+		listen();
 		window = new ClientWindow(this);
 		window.openClient();
-		window.displayMessage(new Message("Hello"));
+		this.port = port;
+		displayMessages();
 	}
 
 	public void openConnection() {
 		try {
-			socket = new DatagramSocket();
+			// socket = new DatagramSocket(port);
+			socket = new DatagramSocket(portFrom);
 			// change to actual IP address
 			inetAddress = InetAddress.getLocalHost();
+			// inetAddress = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (SocketException e) {
@@ -45,7 +60,9 @@ public class Client {
 			data = Message.serialize(message);
 			new Thread("Sending Message") {
 				public void run() {
-					DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, 85);
+					// DatagramPacket packet = new DatagramPacket(data,
+					// data.length, inetAddress, port);
+					DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, portTo);
 					try {
 						socket.send(packet);
 					} catch (IOException e) {
@@ -61,7 +78,6 @@ public class Client {
 	public DatagramPacket receivePacket() {
 		byte[] data = new byte[1024];
 		DatagramPacket packet = new DatagramPacket(data, data.length);
-
 		try {
 			socket.receive(packet);
 		} catch (IOException e) {
@@ -73,14 +89,21 @@ public class Client {
 	public void displayMessages() {
 		new Thread("Display Messages") {
 			public void run() {
+				Message message;
 				while (isRunning) {
-					if (!window.isActive())
-						continue;
 
-					Message message;
-					if ((message = messageQueue.poll()) != null) {
-						window.displayMessage(message);
+					try {
+						Thread.sleep(15);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
+
+					if (window.isActive() && window.isReady()) {
+						if ((message = messageQueue.poll()) != null) {
+							window.displayMessage(message);
+						}
+					}
+
 				}
 			}
 		}.start();
@@ -92,7 +115,8 @@ public class Client {
 				while (isRunning) {
 					DatagramPacket packet = receivePacket();
 					try {
-						messageQueue.add((Message) Message.deserialize(packet.getData()));
+						Message message = (Message) Message.deserialize(packet.getData());
+						messageQueue.add(message);
 					} catch (ClassNotFoundException | IOException e) {
 						e.printStackTrace();
 					}
@@ -106,6 +130,19 @@ public class Client {
 	}
 
 	public static void main(String[] args) {
+		portFrom = Integer.parseInt(args[0]);
+		portTo = Integer.parseInt(args[1]);
+
 		Client testClient = new Client();
+		// try {
+		// BufferedReader input = new BufferedReader(new
+		// FileReader("input.txt"));
+		// String line;
+		// while ((line = input.readLine()) != null) {
+		// testClient.getMessageQueue().add(new Message(line));
+		// }
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 	}
 }

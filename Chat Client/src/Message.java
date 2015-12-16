@@ -16,10 +16,17 @@ public class Message implements Serializable {
 	private String message;
 	private Date timeSent;
 	private Date timeReceived;
+	private int expiryTime;
 	
 	public Message(String message) {
+		// 600ms per word?
+		this(message, message.split(" ").length * 100);
+	}
+	
+	public Message(String message, int expiry) {
 		this.message = message;
 		this.timeSent = new Date();
+		expiryTime = expiry;
 	}
 	
 	public String receiveMessage() {
@@ -35,6 +42,10 @@ public class Message implements Serializable {
 
 	public Date getDateReceived() {
 		return timeReceived;
+	}
+	
+	public int getExpiry() {
+		return expiryTime;
 	}
 
     public static byte[] serialize(Message obj) throws IOException {

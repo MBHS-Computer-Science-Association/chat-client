@@ -1,0 +1,59 @@
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Date;
+
+public class Message implements Serializable {
+	private static final long serialVersionUID = -2114606445786808262L;
+//	private static ByteArrayOutputStream byteOutput;
+//	private static ObjectOutputStream objectOutput;
+//	private static ByteArrayInputStream byteInput;
+//	private static ObjectInputStream objectInput;
+	
+	private String message;
+	private Date timeSent;
+	private Date timeReceived;
+	private int expiryTime;
+	
+	public Message(String message) {
+		// 600ms per word?
+		this(message, message.split(" ").length * 600);
+	}
+	
+	public Message(String message, int expiry) {
+		this.message = message;
+		this.timeSent = new Date();
+		expiryTime = expiry;
+	}
+	
+	public String receiveMessage() {
+		if (timeReceived == null) timeReceived = new Date();
+		String temp = message;
+		message = null;
+		return temp;
+	}
+	
+	public Date getDateSent() {
+		return timeSent;
+	}
+
+	public Date getDateReceived() {
+		return timeReceived;
+	}
+
+    public static byte[] serialize(Message obj) throws IOException {
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ObjectOutputStream o = new ObjectOutputStream(b);
+        o.writeObject(obj);
+        return b.toByteArray();
+    }
+
+    public static Message deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream b = new ByteArrayInputStream(bytes);
+        ObjectInputStream o = new ObjectInputStream(b);
+        return (Message) o.readObject();
+    }
+}
