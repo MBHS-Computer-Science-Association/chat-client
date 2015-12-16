@@ -45,7 +45,7 @@ public class ClientWindow {
 	/**
 	 * Launch the application.
 	 */
-	public ClientWindow openWindow() {
+	public void openClient() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -58,7 +58,6 @@ public class ClientWindow {
 				}
 			}
 		});
-		return this;
 	}
 
 	/**
@@ -125,9 +124,11 @@ public class ClientWindow {
 		gbc_draftMessage.gridx = 1;
 		gbc_draftMessage.gridy = 2;
 		draftMessage.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					send();
+				}
 			}
 		});
 		frame.getContentPane().add(draftMessage, gbc_draftMessage);
@@ -153,10 +154,15 @@ public class ClientWindow {
 	
 	public boolean isActive() {
 		if (!isActive) displayMessage.setText("MUST BE ACTIVE TO SEE NEW MESSAGES");
+		
 		return isActive;
 	}
 	
 	public boolean isReady() {
 		return isReady;
+	}
+	
+	public void setReady(boolean value) {
+		isReady = value;
 	}
 }

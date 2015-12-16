@@ -125,9 +125,11 @@ public class ClientWindow {
 		gbc_draftMessage.gridx = 1;
 		gbc_draftMessage.gridy = 2;
 		draftMessage.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					send();
+				}
 			}
 		});
 		frame.getContentPane().add(draftMessage, gbc_draftMessage);

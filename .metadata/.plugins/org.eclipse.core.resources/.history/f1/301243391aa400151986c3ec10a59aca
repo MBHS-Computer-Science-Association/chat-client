@@ -132,7 +132,7 @@ public class Client {
 	}
 
 	public static void main(String[] args) {
-		InetAddress localhost = null;
+		InetAddress localhost;
 		try {
 			localhost = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -143,7 +143,7 @@ public class Client {
 		Client testClientB = new Client(10301);
 
 		testClientA.getPeers().add(new Peer(localhost, 10301));
-		testClientB.getPeers().add(new Peer(localhost, 10300));
+		testClientB.getPeers().add(new Peer(loclahost, 10300));
 
 	}
 }

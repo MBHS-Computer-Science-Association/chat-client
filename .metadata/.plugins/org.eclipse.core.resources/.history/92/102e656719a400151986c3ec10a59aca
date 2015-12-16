@@ -4,16 +4,19 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
 public class Client {
+	static int portFrom;
+	static int portTo;
+	static InetAddress staticInetAddress;
+
 	private boolean isActive;
 	private Queue<Message> messageQueue;
 	private Set<Peer> peers;
-
+	
 	// UDP Socket - DatagramSocket
 	private DatagramSocket socket;
 	private InetAddress inetAddress;
@@ -21,27 +24,32 @@ public class Client {
 	private ClientWindow window;
 	private boolean isRunning = true;
 
-	public Client() {
+	public Client() throws UnknownHostException {
 		// default port is 85
 		this(85);
 	}
 
-	public Client(int port) {
+	public Client(int port) throws UnknownHostException {
+		this(InetAddress.getLocalHost(), port);
+	}
+	
+	public Client(InetAddress address, int port) {
 		isRunning = true;
 		messageQueue = new LinkedList<>();
-		peers = new HashSet<>();
 		// messageQueue = new PriorityQueue<>();
-
 		openConnection(port);
 		listen();
-		window = new ClientWindow(this).openWindow();
+		window = new ClientWindow(this);
+		window.openClient();
 		displayMessages();
 	}
 
 	public void openConnection(int port) {
 		try {
 			socket = new DatagramSocket(port);
+			// change to actual IP address
 			inetAddress = InetAddress.getLocalHost();
+			// inetAddress = InetAddress.getByName("localhost");
 		} catch (SocketException | UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -59,7 +67,7 @@ public class Client {
 						packets.add(new DatagramPacket(data, data.length, p.address, p.port));
 					}
 					try {
-						for (DatagramPacket d : packets) {
+						for (DatagramPacket d : packets) {							
 							socket.send(d);
 						}
 					} catch (IOException e) {
@@ -80,7 +88,7 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		return packet;
 	}
 
@@ -126,24 +134,17 @@ public class Client {
 	public Queue<Message> getMessageQueue() {
 		return messageQueue;
 	}
-
+	
 	public Set<Peer> getPeers() {
 		return peers;
 	}
 
 	public static void main(String[] args) {
-		InetAddress localhost = null;
+		
 		try {
-			localhost = InetAddress.getLocalHost();
+			Client testClient = new Client();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-
-		Client testClientA = new Client(10300);
-		Client testClientB = new Client(10301);
-
-		testClientA.getPeers().add(new Peer(localhost, 10301));
-		testClientB.getPeers().add(new Peer(localhost, 10300));
-
 	}
 }

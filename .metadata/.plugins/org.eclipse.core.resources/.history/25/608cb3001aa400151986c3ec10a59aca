@@ -4,7 +4,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
@@ -13,7 +12,7 @@ public class Client {
 	private boolean isActive;
 	private Queue<Message> messageQueue;
 	private Set<Peer> peers;
-
+	
 	// UDP Socket - DatagramSocket
 	private DatagramSocket socket;
 	private InetAddress inetAddress;
@@ -29,9 +28,8 @@ public class Client {
 	public Client(int port) {
 		isRunning = true;
 		messageQueue = new LinkedList<>();
-		peers = new HashSet<>();
 		// messageQueue = new PriorityQueue<>();
-
+		
 		openConnection(port);
 		listen();
 		window = new ClientWindow(this).openWindow();
@@ -59,7 +57,7 @@ public class Client {
 						packets.add(new DatagramPacket(data, data.length, p.address, p.port));
 					}
 					try {
-						for (DatagramPacket d : packets) {
+						for (DatagramPacket d : packets) {							
 							socket.send(d);
 						}
 					} catch (IOException e) {
@@ -80,7 +78,7 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		return packet;
 	}
 
@@ -126,24 +124,21 @@ public class Client {
 	public Queue<Message> getMessageQueue() {
 		return messageQueue;
 	}
-
+	
 	public Set<Peer> getPeers() {
 		return peers;
 	}
 
 	public static void main(String[] args) {
-		InetAddress localhost = null;
-		try {
-			localhost = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-
-		Client testClientA = new Client(10300);
-		Client testClientB = new Client(10301);
-
-		testClientA.getPeers().add(new Peer(localhost, 10301));
-		testClientB.getPeers().add(new Peer(localhost, 10300));
-
+			Client testClientA = new Client(10300);
+			Client testClientB = new Client(10301);
+			
+			try {
+				testClientA.getPeers().add(new Peer(InetAddress.getLocalHost(), 10301));
+				testClientB.getPeers().add(new Peer(InetAddress.getLocalHost(), 10300));
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			
 	}
 }
