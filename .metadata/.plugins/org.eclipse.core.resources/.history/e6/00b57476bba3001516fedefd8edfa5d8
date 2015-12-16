@@ -153,9 +153,6 @@ public class ClientWindow {
 	}
 	
 	public boolean isActive() {
-		if (!isActive) displayMessage.setText("MUST BE ACTIVE TO SEE NEW MESSAGES");
-		else displayMessage.setText("");
-		
 		return isActive;
 	}
 	
