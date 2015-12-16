@@ -43,7 +43,7 @@ public class Client {
 		final byte[] data;
 		try {
 			data = Message.serialize(message);
-			new Thread("Sending Message") {
+			new Thread("Sending") {
 				public void run() {
 					DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, 85);
 					try {
@@ -71,7 +71,7 @@ public class Client {
 	}
 
 	public void displayMessages() {
-		new Thread("Display Messages") {
+		new Thread("DisplayMessages") {
 			public void run() {
 				while (isRunning) {
 					if (!window.isActive())

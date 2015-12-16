@@ -13,10 +13,14 @@ public class Client {
 	// UDP Socket - DatagramSocket
 	private DatagramSocket socket;
 	private InetAddress inetAddress;
-
+	
 	private ClientWindow window;
+<<<<<<< HEAD
 	private boolean isRunning = true;
+	
+=======
 
+>>>>>>> origin/master
 	public Client() {
 		messageQueue = new LinkedList<>();
 		//
@@ -25,7 +29,8 @@ public class Client {
 		window.openClient();
 		window.displayMessage(new Message("Hello"));
 	}
-
+<<<<<<< HEAD
+	
 	public void openConnection() {
 		try {
 			socket = new DatagramSocket();
@@ -38,26 +43,47 @@ public class Client {
 		}
 		System.out.println(inetAddress.getHostAddress());
 	}
+	
+=======
 
+>>>>>>> origin/master
 	public void send(Message message) {
-		final byte[] data;
+		byte[] data;
 		try {
 			data = Message.serialize(message);
-			new Thread("Sending Message") {
-				public void run() {
-					DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, 85);
-					try {
-						socket.send(packet);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		new Thread("Sending") {
+			public void run() {
+				DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, port);
+				try {
+					socket.send(packet);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
 	}
+<<<<<<< HEAD
+	
+	public void listen() {
+		new Thread() {
+=======
 
+	public void activateMessages() {
+		displayThread = new Thread() {
+>>>>>>> origin/master
+			public void run() {
+				while(isRunning) {					
+					DatagramPacket packet = receivePacket();
+					String message = new String(packet.getData());
+					messageQueue.add(new Message(message));
+				}
+			}
+		}.start();
+	}
+	
 	public DatagramPacket receivePacket() {
 		byte[] data = new byte[1024];
 		DatagramPacket packet = new DatagramPacket(data, data.length);
@@ -69,38 +95,34 @@ public class Client {
 		}
 		return packet;
 	}
-
+	
 	public void displayMessages() {
-		new Thread("Display Messages") {
+		new Thread("DisplayMessages") {
 			public void run() {
 				while (isRunning) {
 					if (!window.isActive())
 						continue;
-
+					
 					Message message;
 					if ((message = messageQueue.poll()) != null) {
 						window.displayMessage(message);
 					}
 				}
 			}
+<<<<<<< HEAD
 		}.start();
+	}	
+	
+=======
+		};
+		displayThread.start();
 	}
 
-	public void listen() {
-		new Thread("Listen") {
-			public void run() {
-				while (isRunning) {
-					DatagramPacket packet = receivePacket();
-					try {
-						messageQueue.add((Message) Message.deserialize(packet.getData()));
-					} catch (ClassNotFoundException | IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}.start();
+	public void deactivateMessages() {
+		displayThread.interrupt();
 	}
 
+>>>>>>> origin/master
 	public Queue<Message> getMessageQueue() {
 		return messageQueue;
 	}
