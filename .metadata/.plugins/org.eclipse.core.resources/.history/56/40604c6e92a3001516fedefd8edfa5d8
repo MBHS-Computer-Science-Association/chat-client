@@ -17,12 +17,12 @@ public class Message {
 		return temp;
 	}
 	
-	public Date getDateSent() {
-		return timeSent;
+	public Date getDateSet() {
+		return null;
 	}
 
 	public Date getDateReceived() {
-		return timeReceived;
+		return null;
 	}
 	
 }

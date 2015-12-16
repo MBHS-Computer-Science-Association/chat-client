@@ -2,8 +2,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,26 +16,13 @@ import javax.swing.SwingConstants;
 
 public class ClientWindow {
 
-	private Client parentClient;
-	
 	private JFrame frame;
 	private JTextField textField;
 	private JButton btnSend;
 	private JSeparator separator;
 	private JTextArea draftMessage;
 	private JLabel displayMessage;
-	
-	private WindowListener windowListener;
 
-
-	/**
-	 * Create the application.
-	 */
-	public ClientWindow(Client client) {
-		parentClient = client;
-		initialize();
-	}
-	
 	/**
 	 * Launch the application.
 	 */
@@ -56,13 +41,16 @@ public class ClientWindow {
 	}
 
 	/**
+	 * Create the application.
+	 */
+	public ClientWindow() {
+		initialize();
+	}
+
+	/**
 	 * Initialize the contents of the frame.
 	 */
 
-	public void send(String message) {
-		parentClient.send(new Message(message));
-	}
-	
 	//set JLabel to display single message
 	public void displayMessage(Message message) {
 		Timer timer = new Timer();
@@ -80,6 +68,7 @@ public class ClientWindow {
 		
 		// five second delay
 		timer.schedule(task, 5000);
+		
 	}
 
 	private void initialize() {
@@ -109,38 +98,5 @@ public class ClientWindow {
 		textPane.setEditable(false);
 		textPane.setBounds(580, 529, 312, 20);
 		frame.getContentPane().add(textPane);
-		
-		
-		frame.addWindowListener(new WindowListener() {
-			@Override
-			public void windowOpened(WindowEvent e) {
-			}
-
-			@Override
-			public void windowClosing(WindowEvent e) {
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e) {
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e) {
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e) {
-				parentClient.activateMessages();
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-				parentClient.deactivateMessages();
-			}
-		});
 	}
 }

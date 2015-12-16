@@ -33,8 +33,7 @@ public class ClientWindow {
 	/**
 	 * Create the application.
 	 */
-	public ClientWindow(Client client) {
-		parentClient = client;
+	public ClientWindow() {
 		initialize();
 	}
 	
@@ -59,10 +58,6 @@ public class ClientWindow {
 	 * Initialize the contents of the frame.
 	 */
 
-	public void send(String message) {
-		parentClient.send(new Message(message));
-	}
-	
 	//set JLabel to display single message
 	public void displayMessage(Message message) {
 		Timer timer = new Timer();
@@ -134,12 +129,14 @@ public class ClientWindow {
 
 			@Override
 			public void windowActivated(WindowEvent e) {
-				parentClient.activateMessages();
+				// TODO Auto-generated method stub
+				
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
-				parentClient.deactivateMessages();
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}

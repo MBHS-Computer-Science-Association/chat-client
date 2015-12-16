@@ -71,7 +71,7 @@ public class LoginWindow {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 //				ClientWindow.openClient();
-//				new ClientWindow();
+				new ClientWindow();
 			}
 		});
 		btnSignIn.setBounds(210, 192, 117, 29);

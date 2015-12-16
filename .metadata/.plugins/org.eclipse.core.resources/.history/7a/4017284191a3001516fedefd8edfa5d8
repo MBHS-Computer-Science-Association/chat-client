@@ -11,14 +11,12 @@ public class Client {
 		messageQueue = new LinkedList<>();
 		//
 //		messageQueue = new PriorityQueue<>();
-		window = new ClientWindow(this);
+		window = new ClientWindow();
 		window.openClient();
 		window.displayMessage(new Message("Hello"));
 	}
 	
-	public void send(Message message) {
-		// TODO: implement this!
-	}
+	
 	
 	public void activateMessages() {
 		displayThread  = new Thread() {
@@ -34,7 +32,7 @@ public class Client {
 		displayThread.start();
 	}
 	
-	public void deactivateMessages() {
+	public void inactivateMessages() {
 		displayThread.interrupt();
 	}
 	
