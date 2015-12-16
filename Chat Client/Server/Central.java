@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -12,8 +14,14 @@ import java.util.Map;
 public class Central implements Runnable{
 	ServerSocket administration;
 	Map<String, Boolean> online;
+	PrintStream users;
 	
 	public Central(){
+		try {
+			users = new PrintStream(new FileOutputStream("users.txt"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		init();
 	}
 	
@@ -48,6 +56,8 @@ public class Central implements Runnable{
 					String name = (String)in.readObject();
 					if(name != null){
 						noName = false;
+						if(!online.containsKey(name))
+							users.println(name);
 						online.put(name, true);
 					}
 				}
