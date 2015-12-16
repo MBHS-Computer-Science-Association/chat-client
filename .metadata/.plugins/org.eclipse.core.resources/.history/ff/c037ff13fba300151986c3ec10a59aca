@@ -63,7 +63,7 @@ public class Client {
 				public void run() {
 					// DatagramPacket packet = new DatagramPacket(data,
 					// data.length, inetAddress, port);
-					DatagramPacket packet = new DatagramPacket(data, data.length, staticInetAddress, portTo);
+					DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, portTo);
 					try {
 						socket.send(packet);
 					} catch (IOException e) {
@@ -136,7 +136,6 @@ public class Client {
 		portTo = Integer.parseInt(args[1]);
 		try {
 			staticInetAddress = InetAddress.getByName(args[2]);
-			staticInetAddress = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

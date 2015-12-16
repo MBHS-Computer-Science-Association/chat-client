@@ -20,7 +20,7 @@ public class Message implements Serializable {
 	
 	public Message(String message) {
 		// 600ms per word?
-		this(message, message.split(" ").length * 200);
+		this(message, message.split(" ").length * 100);
 	}
 	
 	public Message(String message, int expiry) {

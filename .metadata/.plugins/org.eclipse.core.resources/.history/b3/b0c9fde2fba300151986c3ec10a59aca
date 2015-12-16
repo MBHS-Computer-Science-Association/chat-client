@@ -136,7 +136,6 @@ public class Client {
 		portTo = Integer.parseInt(args[1]);
 		try {
 			staticInetAddress = InetAddress.getByName(args[2]);
-			staticInetAddress = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
