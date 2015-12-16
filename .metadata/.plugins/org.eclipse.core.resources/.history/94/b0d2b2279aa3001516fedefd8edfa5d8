@@ -2,8 +2,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,8 +12,8 @@ public class Client {
 	private DatagramSocket socket;
 	private InetAddress inetAddress;
 	
+	private Thread displayThread;
 	private ClientWindow window;
-	private boolean isRunning = true;
 	
 	public Client() {
 		messageQueue = new LinkedList<>();
@@ -27,45 +25,17 @@ public class Client {
 	}
 	
 	public void openConnection() {
-		try {
-			socket = new DatagramSocket();
-			// change to actual IP address
-			inetAddress = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (SocketException e) {
-			e.printStackTrace();
-		}
-		System.out.println(inetAddress.getHostAddress());
+		
 	}
 	
 	public void send(Message message) {
-		byte[] data;
-		try {
-			data = Message.serialize(message);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		new Thread("Sending") {
-			public void run() {
-				DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, port);
-				try {
-					socket.send(packet);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
+		// TODO: implement this!
 	}
 	
 	public void listen() {
 		new Thread() {
 			public void run() {
-				while(isRunning) {					
-					DatagramPacket packet = receivePacket();
-					String message = new String(packet.getData());
-					messageQueue.add(new Message(message));
-				}
+				DatagramPacket packet = receivePacket();
 			}
 		}.start();
 	}
@@ -82,21 +52,23 @@ public class Client {
 		return packet;
 	}
 	
-	public void displayMessages() {
-		new Thread("DisplayMessages") {
+	public void activateMessages() {
+		displayThread  = new Thread() {
 			public void run() {
-				while (isRunning) {
-					if (!window.isActive())
-						continue;
-					
+				while (!messageQueue.isEmpty()) {
 					Message message;
 					if ((message = messageQueue.poll()) != null) {
 						window.displayMessage(message);
 					}
 				}
 			}
-		}.start();
-	}	
+		};
+		displayThread.start();
+	}
+	
+	public void deactivateMessages() {
+		displayThread.interrupt();
+	}
 	
 	public Queue<Message> getMessageQueue() {
 		return messageQueue;

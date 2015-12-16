@@ -136,11 +136,13 @@ public class ClientWindow {
 			@Override
 			public void windowActivated(WindowEvent e) {
 				isActive = true;
+				parentClient.activateMessages();
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
 				isActive = false;
+				parentClient.deactivateMessages();
 			}
 		});
 	}

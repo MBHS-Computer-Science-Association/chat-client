@@ -7,11 +7,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Message implements Serializable {
-	private static final long serialVersionUID = -2114606445786808262L;
-//	private static ByteArrayOutputStream byteOutput;
-//	private static ObjectOutputStream objectOutput;
-//	private static ByteArrayInputStream byteInput;
-//	private static ObjectInputStream objectInput;
+	private static ByteArrayOutputStream byteOutput;
+	private static ObjectOutputStream objectOutput;
+	private static ByteArrayInputStream byteInput;
+	private static ObjectInputStream objectInput;
 	
 	private String message;
 	private Date timeSent;

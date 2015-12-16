@@ -1,3 +1,5 @@
 1450103699900	Rename field 'textMessage'
 1450227996374	Rename method 'inactivateMessages'
 1450228490537	Rename method 'getDateSet'
+1450231445165	Rename method 'receive'
+1450234612225	Rename method 'activateMessages'

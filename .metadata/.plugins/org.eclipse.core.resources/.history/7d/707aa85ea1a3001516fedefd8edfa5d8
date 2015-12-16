@@ -2,8 +2,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -27,16 +25,7 @@ public class Client {
 	}
 	
 	public void openConnection() {
-		try {
-			socket = new DatagramSocket();
-			// change to actual IP address
-			inetAddress = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (SocketException e) {
-			e.printStackTrace();
-		}
-		System.out.println(inetAddress.getHostAddress());
+		
 	}
 	
 	public void send(Message message) {
@@ -48,7 +37,7 @@ public class Client {
 		}
 		new Thread("Sending") {
 			public void run() {
-				DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, port);
+				DatagramPacket packet = new DatagramPacket(data, data.length, ip, port);
 				try {
 					socket.send(packet);
 				} catch (IOException e) {
