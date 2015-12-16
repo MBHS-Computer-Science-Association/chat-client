@@ -63,6 +63,7 @@ public class Client {
 					// DatagramPacket packet = new DatagramPacket(data,
 					// data.length, inetAddress, port);
 					DatagramPacket packet = new DatagramPacket(data, data.length, inetAddress, portTo);
+					System.out.println("sending");
 					try {
 						socket.send(packet);
 					} catch (IOException e) {
@@ -83,7 +84,6 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 		return packet;
 	}
 

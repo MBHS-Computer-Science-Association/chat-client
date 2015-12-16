@@ -147,13 +147,14 @@ public class ClientWindow {
 		frame.getContentPane().add(btnSend, gbc_btnSend);
 
 		frame.addWindowListener(new WindowAdapter() {
-			public void windowActivated(WindowEvent e) {isActive = true; displayMessage.setText("");}
+			public void windowActivated(WindowEvent e) {isActive = true;}
 			public void windowDeactivated(WindowEvent e) {isActive = false;}
 		});
 	}
 	
 	public boolean isActive() {
 		if (!isActive) displayMessage.setText("MUST BE ACTIVE TO SEE NEW MESSAGES");
+		else displayMessage.setText("");
 		
 		return isActive;
 	}
