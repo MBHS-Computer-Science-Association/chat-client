@@ -142,8 +142,8 @@ public class Client {
 		Client testClientA = new Client(10300);
 		Client testClientB = new Client(10301);
 
-		testClientA.getPeers().add(new Peer(localhost, 10301));
-		testClientB.getPeers().add(new Peer(localhost, 10300));
+		testClientA.getPeers().add(new Peer("Test A", localhost, 10301));
+		testClientB.getPeers().add(new Peer("Test B", localhost, 10300));
 
 	}
 }
