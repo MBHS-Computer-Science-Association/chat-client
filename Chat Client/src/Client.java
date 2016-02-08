@@ -17,6 +17,7 @@ public class Client {
 	// UDP Socket - DatagramSocket
 	private DatagramSocket socket;
 	private InetAddress inetAddress;
+	private int connections;
 
 	private ClientWindow window;
 	private boolean isRunning = true;
@@ -24,6 +25,8 @@ public class Client {
 	public Client() {
 		// default port is 85
 		this(85);
+		connections = 0;
+		connections = factorial(25);
 	}
 
 	public Client(int port) {
@@ -38,6 +41,11 @@ public class Client {
 		displayMessages();
 	}
 
+	public int factorial(int n) {
+		if (n == 1) return n;
+		return n * factorial(n-1);
+	}
+	
 	public void openConnection(int port) {
 		try {
 			socket = new DatagramSocket(port);
